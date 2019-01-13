@@ -7,13 +7,13 @@ select first_name,last_name from actor;
 select concat(first_name,' ', last_name) as Actorname from actor;
 
 #2a. You need to find the ID number, first name, and last name of an actor, of whom you know only the first name, "Joe." What is one query would you use to obtain this information?
-select actor_id,first_name,last_name from actor where first_name="JOE";
+select actor_id,first_name,last_name from actor where upper(first_name)="Joe";
 
 #Find all actors whose last name contain the letters GEN:
 select * from actor where last_name like "%GEN%";
 
 #2c. Find all actors whose last names contain the letters LI. This time, order the rows by last name and first name, in that order:
-select last_name,first_name from actor where last_name like "%LI%";
+select last_name,first_name from actor where last_name like "%LI%" order by last_name,first_name;
 
 #2d. Using IN, display the country_id and country columns of the following countries: Afghanistan, Bangladesh, and China:
 select country_id,country from country where country IN ("Afghanistan","Bangladesh","China");
@@ -72,7 +72,8 @@ INNER JOIN country D ON  C.country_id = D.country_id where  country = "Canada";
 select film_id,title from film where film_id IN (select film_id from film_category where category_id IN ( select category_id from category where name="Family"));
 
 #7e. Display the most frequently rented movies in descending order.
-select title,rental_duration from film order by rental_duration desc;
+select count(C.rental_id) as "Rental_count",A.film_id,A.title from film A INNER JOIN inventory B ON A.film_id = B.film_id INNER JOIN rental C ON B.inventory_id = C.inventory_id
+group by A.film_id order by Rental_count Desc;
 
 #7f. Write a query to display how much business, in dollars, each store brought in.
 select staff.first_name,staff.last_name,sum(payment.amount) as Totalamount from staff INNER JOIN payment where staff.staff_id = payment.staff_id group by payment.staff_id;
